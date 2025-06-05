@@ -22,7 +22,6 @@ on:
 jobs:
   check-file-contents:
     runs-on: ubuntu-latest
-    continue-on-error: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -65,17 +64,19 @@ jobs:
             echo "$CHANGED_FILES"
             echo ""
 
-            # Check for 'from __future__ import annotations' in changed .py files.
-            set +e
-            grep -lE 'from __future__ import annotations' $CHANGED_FILES
-            RESULT=$?
-            set -e
+            # Use grep -L to find files that DO NOT contain the pattern.
+            # This command will output a list of non-compliant files.
+            FILES_MISSING_IMPORT=$(grep -L 'from __future__ import annotations' $CHANGED_FILES)
 
-            if [[ $RESULT -ne 0 ]]; then
-              echo "❌ Always use 'from __future__ import annotations'. This allows us to do forward references in type annotations without quotes."
-              exit 1
+            # Check if the list of non-compliant files is empty
+            if [ -z "$FILES_MISSING_IMPORT" ]; then
+              echo "✅ All modified Python files include 'from __future__ import annotations'."
+              exit 0
             else
-              echo "✅ No instances of 'from __future__ import annotations' found in changed Python files."
+              echo "❌ The following files are missing 'from __future__ import annotations':"
+              echo "$FILES_MISSING_IMPORT"
+              echo "This import is required to allow forward references in type annotations without quotes."
+              exit 1
             fi
           fi
 
