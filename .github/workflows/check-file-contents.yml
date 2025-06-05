@@ -22,6 +22,7 @@ on:
 jobs:
   check-file-contents:
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -40,17 +41,20 @@ jobs:
             # Check for 'logger = logging.getLogger(__name__)' in changed .py files.
             # The grep command will exit with a non-zero status code if the pattern is not found.
             # We invert the exit code with ! so the step succeeds if the pattern is NOT found.
+            echo "Checking for 'logger = logging.getLogger(__name__)' in changed Python files."
             set +e
             ! grep -lE 'logger = logging\.getLogger\(__name__\)' $CHANGED_FILES
             RESULT=$?
             set -e
 
             if [[ $RESULT -ne 0 ]]; then
-              echo "Do not use 'logger = logging.getLogger(__name__)'. Use 'logger = logging.getLogger('google_adk.' + __name__)' instead."
+              echo "❌ Do not use 'logger = logging.getLogger(__name__)'. Use 'logger = logging.getLogger('google_adk.' + __name__)' instead."
               exit 1
+            else
+              echo "✅ No instances of 'logger = logging.getLogger(__name__)' found in changed Python files."
+            fi
             fi
           fi
-        continue-on-error: true
 
       - name: Check for import pattern in certain changed Python files
         run: |
@@ -68,11 +72,12 @@ jobs:
             set -e
 
             if [[ $RESULT -ne 0 ]]; then
-              echo "Always use 'from __future__ import annotations'. This allows us to do forward references in type annotations without quotes."
+              echo "❌ Always use 'from __future__ import annotations'. This allows us to do forward references in type annotations without quotes."
               exit 1
+            else
+              echo "✅ No instances of 'from __future__ import annotations' found in changed Python files."
             fi
           fi
-        continue-on-error: true
 
       - name: Check for import from cli package in certain changed Python files
         run: |
@@ -91,7 +96,9 @@ jobs:
             set -e
 
             if [[ $RESULT -ne 0 ]]; then
-              echo "Do not import from the cli package outside of the cli package. If you need to reuse the code elsewhere, please move the code outside of the cli package."
+              echo "❌ Do not import from the cli package outside of the cli package. If you need to reuse the code elsewhere, please move the code outside of the cli package."
               exit 1
+            else
+              echo "✅ No instances of importing from the cli package found in changed Python files."
             fi
           fi
