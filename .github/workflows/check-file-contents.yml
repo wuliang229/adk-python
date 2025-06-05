@@ -96,11 +96,11 @@ jobs:
             echo ""
 
             set +e
-            FILES_WITH_FORBIDDEN_IMPORT=$(grep -lE '^from.*cli\..*import.*$' $CHANGED_FILES)
+            FILES_WITH_FORBIDDEN_IMPORT=$(grep -lE '^from.*cli.*import.*$' $CHANGED_FILES)
             GREP_EXIT_CODE=$?
             set -e
 
-            if [[ $RESULT -ne 0 ]]; then
+            if [[ $GREP_EXIT_CODE -eq 0 ]]; then
               echo "❌ Do not import from the cli package outside of the cli package. If you need to reuse the code elsewhere, please move the code outside of the cli package."
               exit 1
             else
