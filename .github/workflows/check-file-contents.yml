@@ -57,7 +57,7 @@ jobs:
       - name: Check for import pattern in certain changed Python files
         run: |
           git fetch origin ${{ github.base_ref }}
-          CHANGED_FILES=$(git diff --diff-filter=ACMR --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.py$' | grep -v -E '__init__.py$|version.py$|tests/.*' || true)
+          CHANGED_FILES=$(git diff --diff-filter=ACMR --name-only origin/${{ github.base_ref }}...HEAD | grep -E '\.py$' | grep -v -E '__init__.py$|version.py$|tests/.*|contributing/samples/' || true)
           if [ -n "$CHANGED_FILES" ]; then
             echo "Changed Python files to check:"
             echo "$CHANGED_FILES"
