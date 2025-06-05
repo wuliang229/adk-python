@@ -35,6 +35,7 @@ from .events.event import Event
 from .models.llm_request import LlmRequest
 from .models.llm_response import LlmResponse
 from .tools.base_tool import BaseTool
+from .cli.asd import asd
 
 tracer = trace.get_tracer('gcp.vertex.agent')
 
