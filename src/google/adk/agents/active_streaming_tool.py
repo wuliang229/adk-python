@@ -37,3 +37,4 @@ class ActiveStreamingTool(BaseModel):
 
   stream: Optional[LiveRequestQueue] = None
   """The active (input) streams of this streaming tool."""
+
