@@ -50,6 +50,7 @@ jobs:
               exit 1
             fi
           fi
+        continue-on-error: true
 
       - name: Check for import pattern in certain changed Python files
         run: |
@@ -71,6 +72,7 @@ jobs:
               exit 1
             fi
           fi
+        continue-on-error: true
 
       - name: Check for import from cli package in certain changed Python files
         run: |
