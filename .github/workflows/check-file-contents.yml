@@ -41,7 +41,7 @@ jobs:
           # The grep command will exit with a non-zero status code if the pattern is not found.
           # We invert the exit code with ! so the step succeeds if the pattern is NOT found.
           set +e
-          ! grep -lE 'logger = logging\.getLogger\(__name__\)' $CHANGED_FILE
+          ! grep -lE 'logger = logging\.getLogger\(__name__\)' $CHANGED_FILES
           RESULT=$?
           set -e
 
@@ -61,7 +61,7 @@ jobs:
 
           # Check for `from __future__ import annotations` in changed .py files.
           set +e
-          grep -lE 'from __future__ import annotations' $CHANGED_FILE
+          grep -lE 'from __future__ import annotations' $CHANGED_FILES
           RESULT=$?
           set -e
 
@@ -82,7 +82,7 @@ jobs:
           # The grep command will exit with a non-zero status code if the pattern is not found.
           # We invert the exit code with ! so the step succeeds if the pattern is NOT found.
           set +e
-          ! grep -lE '^from.*cli\\..*import.*$' $CHANGED_FILE
+          ! grep -lE '^from.*cli\\..*import.*$' $CHANGED_FILES
           RESULT=$?
           set -e
 
