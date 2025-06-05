@@ -22,6 +22,7 @@
 #    constructs of the framework that are not observable by the SDK.
 
 
+from __future__ import annotations
 
 import json
 from typing import Any
