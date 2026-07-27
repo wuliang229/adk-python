@@ -38,7 +38,7 @@ __all__ = [
 _LAZY_MEMBERS: dict[str, str] = {
     "DebugLoggingPlugin": "debug_logging_plugin",
     "LoggingPlugin": "logging_plugin",
-    "ReflectAndRetryModelPlugin": "reflect_retry_model_plugin",
+    "ReflectAndRetryModelPlugin": "_reflect_retry_model_plugin",
     "ReflectAndRetryToolPlugin": "reflect_retry_tool_plugin",
 }
 
