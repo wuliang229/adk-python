@@ -888,23 +888,23 @@ class TestAgentRegistryMtls:
         assert _use_client_cert_effective() == expected
 
   @pytest.mark.parametrize(
-      "use_mtls_env, client_cert_source, expected_domain",
+      "use_mtls_env, client_cert_source, expected",
       [
           # Auto mode (default)
-          (None, None, "agentregistry.googleapis.com"),
-          (None, lambda: True, "agentregistry.mtls.googleapis.com"),
+          (None, None, False),
+          (None, lambda: True, True),
           # Always mode
-          ("always", None, "agentregistry.mtls.googleapis.com"),
-          ("always", lambda: True, "agentregistry.mtls.googleapis.com"),
+          ("always", None, True),
+          ("always", lambda: True, True),
           # Never mode
-          ("never", None, "agentregistry.googleapis.com"),
-          ("never", lambda: True, "agentregistry.googleapis.com"),
+          ("never", None, False),
+          ("never", lambda: True, False),
       ],
   )
-  def test_get_agent_registry_base_url(
-      self, use_mtls_env, client_cert_source, expected_domain, registry
+  def test_should_use_mtls_endpoint(
+      self, use_mtls_env, client_cert_source, expected, registry
   ):
-    from google.adk.integrations.agent_registry.agent_registry import _get_agent_registry_base_url
+    from google.adk.integrations.agent_registry.agent_registry import _should_use_mtls_endpoint
 
     env_patch = {}
     if use_mtls_env is not None:
@@ -914,7 +914,7 @@ class TestAgentRegistryMtls:
       env_patch = {"GOOGLE_API_USE_MTLS_ENDPOINT": "auto"}
 
     with patch.dict(os.environ, env_patch):
-      assert expected_domain in _get_agent_registry_base_url(client_cert_source)
+      assert expected == _should_use_mtls_endpoint(client_cert_source)
 
   def test_make_request_error_handling(self, registry):
     mock_session = registry._session
