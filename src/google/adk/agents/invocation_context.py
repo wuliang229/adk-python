@@ -14,6 +14,7 @@
 
 from __future__ import annotations
 
+import asyncio
 from typing import Any
 from typing import cast
 from typing import Optional
@@ -184,6 +185,9 @@ class InvocationContext(BaseModel):
 
   active_streaming_tools: Optional[dict[str, ActiveStreamingTool]] = None
   """The running streaming tools of this invocation."""
+
+  active_non_blocking_tool_tasks: Optional[dict[str, asyncio.Task[Any]]] = None
+  """The running non-blocking tool tasks of this invocation (Live only)."""
 
   transcription_cache: Optional[list[TranscriptionEntry]] = None
   """Caches necessary data, audio or contents, that are needed by transcription."""
